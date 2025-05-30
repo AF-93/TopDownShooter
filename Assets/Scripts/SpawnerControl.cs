@@ -9,6 +9,8 @@ public class SpawnerControl : MonoBehaviour
     private float timer = 0f;
     private Transform[] spawnPoints;
     private int currentEnemies = 0;
+    private System.Collections.Generic.List<GameObject> enemyPool = new System.Collections.Generic.List<GameObject>();
+
     void Start()
     {
         spawnPoints = new Transform[transform.childCount];
@@ -29,8 +31,33 @@ public class SpawnerControl : MonoBehaviour
     }
     void SpawnEnemy()
     {
-        int index = Random.Range(0, spawnPoints.Length);
-        GameObject enemy = Instantiate(enemyPrefab, spawnPoints[index].position, Quaternion.identity);
+        GameObject enemy = null;
+
+        // Busca un enemigo inactivo en el pool
+        foreach (var e in enemyPool)
+        {
+            if (!e.activeInHierarchy)
+            {
+                enemy = e;
+                break;
+            }
+        }
+
+        // Si no hay, instancia uno nuevo y agrégalo al pool
+        if (enemy == null)
+        {
+            int index = Random.Range(0, spawnPoints.Length);
+            enemy = Instantiate(enemyPrefab, spawnPoints[index].position, Quaternion.identity);
+            enemyPool.Add(enemy);
+        }
+        else
+        {
+            int index = Random.Range(0, spawnPoints.Length);
+            enemy.transform.position = spawnPoints[index].position;
+            enemy.transform.rotation = Quaternion.identity;
+            enemy.SetActive(true);
+        }
+
         currentEnemies++;
         Enemy enemyScript = enemy.GetComponent<Enemy>();
         if (enemyScript != null)

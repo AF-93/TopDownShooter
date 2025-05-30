@@ -8,12 +8,12 @@ public class Enemy : MonoBehaviour
         if (other.gameObject.CompareTag("Bullet"))
         {
             {
-                Destroy(gameObject);
+                gameObject.SetActive(false);
             }
         }
 
     }
-        void OnDestroy()
+        void OnDisable()
         {
             if (spawner != null)
                 spawner.EnemyDied();
