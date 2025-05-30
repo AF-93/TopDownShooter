@@ -1,17 +1,22 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
     [HideInInspector] public SpawnerControl spawner;
     [HideInInspector] public Transform player;
-    public float speed = 3f;
+    private NavMeshAgent agent;
+
+    void Awake()
+    {
+        agent = GetComponent<NavMeshAgent>();
+    }
 
     void Update()
     {
-        if (player != null && gameObject.activeInHierarchy)
+        if (player != null && agent != null && gameObject.activeInHierarchy)
         {
-            Vector3 direction = (player.position - transform.position).normalized;
-            transform.position += direction * speed * Time.deltaTime;
+            agent.SetDestination(player.position);
         }
     }
 
@@ -27,7 +32,6 @@ public class Enemy : MonoBehaviour
         }
         else if (other.gameObject.CompareTag("Player"))
         {
-            // Aquí puedes agregar lógica para manejar la colisión con el jugador
             Debug.Log("Eh Gato dame todo!");
         }
     }
