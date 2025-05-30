@@ -597,8 +597,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 009ea30c03b06d94ebb8d1da72a6dfcc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemyPrefab: {fileID: 0}
-  spawnInterval: 1.39
+  enemyPrefab: {fileID: 8843491697491545988, guid: eb47207dea57db1408b8fa424ae56bff, type: 3}
+  spawnInterval: 0.5
   maxEnemies: 16
 --- !u!4 &341197752
 Transform:
@@ -950,7 +950,7 @@ GameObject:
   - component: {fileID: 1347346484}
   m_Layer: 0
   m_Name: Player
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -986,10 +986,10 @@ MonoBehaviour:
   bulletPrefab: {fileID: 5871042626101729751, guid: eec94cfe9a69ba142bdc3e382ba26880, type: 3}
   firePoint: {fileID: 1793765913}
   burstCount: 3
-  burstDelay: 0.5
+  burstDelay: 0.18
   gravityForce: -10.33
   movementSpeed: 4.42
-  burstCooldown: 5
+  burstCooldown: 2
   burstTimer: 0
 --- !u!114 &1347346485
 MonoBehaviour:

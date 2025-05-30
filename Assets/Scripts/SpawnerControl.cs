@@ -63,6 +63,8 @@ public class SpawnerControl : MonoBehaviour
         if (enemyScript != null)
         {
             enemyScript.spawner = this;
+            
+            enemyScript.player = GameObject.FindGameObjectWithTag("Player").transform;
         }
     }
     public void EnemyDied()
