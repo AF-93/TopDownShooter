@@ -5,8 +5,10 @@ using static UnityEngine.GraphicsBuffer;
 
 public class PlayerController : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-
+    [Range(0.1f, 5f)]
+    [SerializeField] private float fireCooldown; // Tiempo de cooldown entre disparos
+    private bool canFire = true;
+    private float fireCooldownTimer = 0f;
     [SerializeField] private GameObject bulletPrefab;
     [SerializeField] private Transform firePoint;
     [Range(1f, 5f)]
@@ -31,6 +33,7 @@ public class PlayerController : MonoBehaviour
         characterController = GetComponent<CharacterController>();
     }
 
+
     void Update()
     {
         if (!characterController.isGrounded)
@@ -48,6 +51,17 @@ public class PlayerController : MonoBehaviour
 
         lookTarget.y = transform.position.y;
         transform.LookAt(lookTarget);
+
+        // Cooldown para disparo simple
+        if (!canFire)
+        {
+            fireCooldownTimer += Time.deltaTime;
+            if (fireCooldownTimer >= fireCooldown)
+            {
+                canFire = true;
+                fireCooldownTimer = 0f;
+            }
+        }
 
         if (!canBurst)
         {
@@ -82,9 +96,11 @@ public class PlayerController : MonoBehaviour
     }
     public void OnFire(InputAction.CallbackContext context)
     {
-        if (context.performed)
+        if (context.performed && canFire)
         {
             Instantiate(bulletPrefab, firePoint.position, firePoint.rotation);
+            canFire = false;
+            fireCooldownTimer = 0f;
         }
     }
     

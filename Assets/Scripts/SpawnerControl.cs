@@ -6,7 +6,11 @@ public class SpawnerControl : MonoBehaviour
     [Range(0.1f, 5f)]
     [SerializeField] private float spawnInterval = 2f;
     [SerializeField] private int maxEnemies;
+    [SerializeField] private int absoluteMaxEnemies; // Límite absoluto
+    [SerializeField] private float increaseInterval; // Cada cuántos segundos aumenta el máximo
+    [SerializeField] private int increaseAmount = 1; // Cuánto aumenta cada vez
     private float timer = 0f;
+    private float increaseTimer = 0f;
     private Transform[] spawnPoints;
     private int currentEnemies = 0;
     private System.Collections.Generic.List<GameObject> enemyPool = new System.Collections.Generic.List<GameObject>();
@@ -23,10 +27,22 @@ public class SpawnerControl : MonoBehaviour
     void Update()
     {
         timer += Time.deltaTime;
+        increaseTimer += Time.deltaTime;
+
         if (timer >= spawnInterval && currentEnemies < maxEnemies)
         {
             SpawnEnemy();
             timer = 0f;
+        }
+
+        // Aumenta el máximo cada cierto tiempo, sin superar el límite absoluto
+        if (increaseTimer >= increaseInterval)
+        {
+            if (maxEnemies < absoluteMaxEnemies)
+            {
+                maxEnemies = Mathf.Min(maxEnemies + increaseAmount, absoluteMaxEnemies);
+            }
+            increaseTimer = 0f;
         }
     }
     void SpawnEnemy()
