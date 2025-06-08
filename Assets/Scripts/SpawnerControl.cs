@@ -4,13 +4,14 @@ public class SpawnerControl : MonoBehaviour
 {
     [SerializeField] private GameObject enemyPrefab;
     [Range(0.1f, 5f)]
-    [SerializeField] private float spawnInterval = 2f;
-    [SerializeField] private int maxEnemies;
-    [SerializeField] private int absoluteMaxEnemies; // Límite absoluto
-    [SerializeField] private float increaseInterval; // Cada cuántos segundos aumenta el máximo
-    [SerializeField] private int increaseAmount = 1; // Cuánto aumenta cada vez
-    private float timer = 0f;
-    private float increaseTimer = 0f;
+    [SerializeField] private float spawnInterval = 2f; // Intervalo de tiempo entre cada generación de enemigos
+    [SerializeField] private int maxEnemies; // Máximo de enemigos que se pueden generar al mismo tiempo
+    [SerializeField] private int absoluteMaxEnemies; // Límite absoluto de enemigos que se pueden generar
+    [Range(1, 10)]
+    [SerializeField] private float increaseInterval; // Cada cuántos segundos aumenta el máximo de enemigos
+    [SerializeField] private int increaseAmount = 1; // Cuánto aumenta cada vez el máximo de enemigos
+    private float timer = 0f; // Temporizador para controlar el intervalo de generación
+    private float increaseTimer = 0f; // Temporizador para controlar el aumento del máximo de enemigos
     private Transform[] spawnPoints;
     private int currentEnemies = 0;
     private System.Collections.Generic.List<GameObject> enemyPool = new System.Collections.Generic.List<GameObject>();
@@ -38,11 +39,11 @@ public class SpawnerControl : MonoBehaviour
         // Aumenta el máximo cada cierto tiempo, sin superar el límite absoluto
         if (increaseTimer >= increaseInterval)
         {
-            if (maxEnemies < absoluteMaxEnemies)
+            if (maxEnemies < absoluteMaxEnemies) // Compara si el máximo actual es menor que el absoluto
             {
-                maxEnemies = Mathf.Min(maxEnemies + increaseAmount, absoluteMaxEnemies);
+                maxEnemies = Mathf.Min(maxEnemies + increaseAmount, absoluteMaxEnemies); // Aumenta el máximo, pero no supera el absoluto
             }
-            increaseTimer = 0f;
+            increaseTimer = 0f;// Reinicia el temporizador de aumento
         }
     }
     void SpawnEnemy()
@@ -52,9 +53,9 @@ public class SpawnerControl : MonoBehaviour
         // Busca un enemigo inactivo en el pool
         foreach (var e in enemyPool)
         {
-            if (!e.activeInHierarchy)
+            if (!e.activeInHierarchy)// Verifica si el enemigo está inactivo
             {
-                enemy = e;
+                enemy = e; // Asigna el enemigo inactivo encontrado
                 break;
             }
         }
@@ -66,7 +67,7 @@ public class SpawnerControl : MonoBehaviour
             enemy = Instantiate(enemyPrefab, spawnPoints[index].position, Quaternion.identity);
             enemyPool.Add(enemy);
         }
-        else
+        else // Si hay un enemigo inactivo, lo reutiliza
         {
             int index = Random.Range(0, spawnPoints.Length);
             enemy.transform.position = spawnPoints[index].position;
@@ -76,14 +77,14 @@ public class SpawnerControl : MonoBehaviour
 
         currentEnemies++;
         Enemy enemyScript = enemy.GetComponent<Enemy>();
-        if (enemyScript != null)
+        if (enemyScript != null) // Asegúrate de que el enemigo tenga un script Enemy
         {
             enemyScript.spawner = this;
             
             enemyScript.player = GameObject.FindGameObjectWithTag("Player").transform;
         }
     }
-    public void EnemyDied()
+    public void EnemyDied() // Método para llamar cuando un enemigo muere
     {
         currentEnemies--;
     }

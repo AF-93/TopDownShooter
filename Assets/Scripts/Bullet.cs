@@ -12,6 +12,6 @@ public class Bullet : MonoBehaviour
 
     void Update()
     {
-        transform.position += transform.forward * speed * Time.deltaTime;
+        transform.position += transform.forward * speed * Time.deltaTime; // Mueve la bala hacia adelante
     }
 }
