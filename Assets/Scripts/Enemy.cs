@@ -7,6 +7,7 @@ public class Enemy : MonoBehaviour
     [HideInInspector] public Transform player;
     private NavMeshAgent agent;
     [SerializeField] private int health = 100;
+    [SerializeField] private int damageP;
 
     void Awake()
     {
@@ -26,7 +27,10 @@ public class Enemy : MonoBehaviour
         if (other.gameObject.CompareTag("Bullet")) //detecta si colisiona con la bala
         {       
             Destroy(other.gameObject); //destruye la bala
+            health-=25;
+            if(health<=0){
             gameObject.SetActive(false);//desactiva el enemigo
+            }
             if (spawner != null)//verifica si el spawner no es nulo
             {
                 spawner.EnemyDied(); //notifica al spawner que el enemigo ha muerto
@@ -34,7 +38,8 @@ public class Enemy : MonoBehaviour
         }
         else if (other.gameObject.CompareTag("Player"))
         {
-            Debug.Log("Eh Gato dame todo!");
+            PlayerController player = other.gameObject.GetComponent<PlayerController>();
+            player.LPPlayer(-damageP);
         }
     }
 }
