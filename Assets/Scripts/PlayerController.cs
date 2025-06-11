@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 using static UnityEngine.GraphicsBuffer;
 
 public class PlayerController : MonoBehaviour
-{
+{   [SerializeField] int lifePoints;
     [Range(0.1f, 5f)]
     [SerializeField] private float fireCooldown; // Tiempo de cooldown entre disparos
     private bool canFire = true;
@@ -121,5 +121,9 @@ public class PlayerController : MonoBehaviour
             burstTimer = 0f;
         }
         
+    }
+    public void LPPlayer(int valor){
+        lifePoints += valor;
+        Debug.Log("vida: " + lifePoints);
     }
 }
