@@ -8,10 +8,31 @@ public class Enemy : MonoBehaviour
     private NavMeshAgent agent;
     [SerializeField] private int health = 100;
     [SerializeField] private int damageP;
+    private int maxHealth;
+    private HealthBar healthBar;
+    private UI ui;
 
     void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
+        maxHealth = health;
+        healthBar = GetComponentInChildren<HealthBar>();
+        if (healthBar != null)
+        {
+            healthBar.SetMaxHealth(maxHealth);
+            healthBar.SetHealth(health);
+        }
+        ui = FindFirstObjectByType<UI>();
+    }
+
+    void OnEnable()
+    {
+        health = maxHealth;
+        if (healthBar != null)
+        {
+            healthBar.SetMaxHealth(maxHealth);
+            healthBar.SetHealth(health);
+        }
     }
 
     void Update()
@@ -25,11 +46,16 @@ public class Enemy : MonoBehaviour
     void OnCollisionEnter(Collision other)
     {
         if (other.gameObject.CompareTag("Bullet")) //detecta si colisiona con la bala
-        {       
+        {
             Destroy(other.gameObject); //destruye la bala
-            health-=25;
-            if(health<=0){
-            gameObject.SetActive(false);//desactiva el enemigo
+            health -= 25;
+            if (healthBar != null)
+                healthBar.SetHealth(health);
+            if (health <= 0)
+            {
+                gameObject.SetActive(false);//desactiva el enemigo
+                if (ui != null)
+                    ui.AddScore(100); // Suma 100 puntos por enemigo eliminado
             }
             if (spawner != null)//verifica si el spawner no es nulo
             {

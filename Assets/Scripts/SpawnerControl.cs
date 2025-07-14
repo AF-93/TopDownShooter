@@ -3,11 +3,11 @@ using UnityEngine;
 public class SpawnerControl : MonoBehaviour
 {
     [SerializeField] private GameObject enemyPrefab;
-    [Range(0.1f, 5f)]
+    [Range(0.1f, 10f)]
     [SerializeField] private float spawnInterval = 2f; // Intervalo de tiempo entre cada generación de enemigos
     [SerializeField] private int maxEnemies; // Máximo de enemigos que se pueden generar al mismo tiempo
     [SerializeField] private int absoluteMaxEnemies; // Límite absoluto de enemigos que se pueden generar
-    [Range(1, 10)]
+    [Range(1, 60)]
     [SerializeField] private float increaseInterval; // Cada cuántos segundos aumenta el máximo de enemigos
     [SerializeField] private int increaseAmount = 1; // Cuánto aumenta cada vez el máximo de enemigos
     private float timer = 0f; // Temporizador para controlar el intervalo de generación

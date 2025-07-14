@@ -125,5 +125,9 @@ public class PlayerController : MonoBehaviour
     public void LPPlayer(int valor){
         lifePoints += valor;
         Debug.Log("vida: " + lifePoints);
+        if (lifePoints <= 0)
+        {
+            GameManager.Instance.GameOver();
+        }
     }
 }
