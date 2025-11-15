@@ -15,6 +15,15 @@ public class UI : MonoBehaviour
     {
         UpdateScore(0);
         UpdateTimer(0f);
+
+        if (GameEvents.Instance != null)
+        {
+            GameEvents.Instance.OnScoreAdded += OnScoreAdded;
+            GameEvents.Instance.OnGameOver += OnGameOver;
+            GameEvents.Instance.OnVictory += OnVictory;
+            GameEvents.Instance.OnGamePaused += OnGamePaused;
+            GameEvents.Instance.OnGameResumed += OnGameResumed;
+        }
     }
 
     void Update()
@@ -30,6 +39,9 @@ public class UI : MonoBehaviour
     {
         score += value;
         UpdateScore(score);
+        
+        GameEvents.Instance?.RaiseScoreAdded(value);
+
         if (score >= GameManager.Instance.targetScore)
         {
             GameManager.Instance.Victory();
@@ -48,8 +60,45 @@ public class UI : MonoBehaviour
             timerText.text = "Time: " + time.ToString("F2") + "s";
     }
 
+    private void OnScoreAdded(int amount)
+    {
+        Debug.Log($"Puntuación añadida: {amount}");
+    }
+
+    private void OnGameOver()
+    {
+        StopTimer();
+    }
+
+    private void OnVictory()
+    {
+        StopTimer();
+    }
+
+    private void OnGamePaused()
+    {
+        isGameActive = false;
+    }
+
+    private void OnGameResumed()
+    {
+        isGameActive = true;
+    }
+
     public void StopTimer()
     {
         isGameActive = false;
+    }
+
+    private void OnDestroy()
+    {
+        if (GameEvents.Instance != null)
+        {
+            GameEvents.Instance.OnScoreAdded -= OnScoreAdded;
+            GameEvents.Instance.OnGameOver -= OnGameOver;
+            GameEvents.Instance.OnVictory -= OnVictory;
+            GameEvents.Instance.OnGamePaused -= OnGamePaused;
+            GameEvents.Instance.OnGameResumed -= OnGameResumed;
+        }
     }
 }
