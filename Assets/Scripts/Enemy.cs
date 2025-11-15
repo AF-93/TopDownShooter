@@ -37,29 +37,32 @@ public class Enemy : MonoBehaviour
 
     void Update()
     {
-        if (player != null && agent != null && gameObject.activeInHierarchy) //si el jugador existe, el navmesh agente tambien y el enemigo esta activo.
+        if (player != null && agent != null && gameObject.activeInHierarchy)
         {
-            agent.SetDestination(player.position); //mueve al enemigo hacia la posición del jugador
+            agent.SetDestination(player.position);
         }
     }
 
     void OnCollisionEnter(Collision other)
     {
-        if (other.gameObject.CompareTag("Bullet")) //detecta si colisiona con la bala
+        if (other.gameObject.CompareTag("Bullet"))
         {
-            Destroy(other.gameObject); //destruye la bala
+            Destroy(other.gameObject);
             health -= 25;
             if (healthBar != null)
                 healthBar.SetHealth(health);
             if (health <= 0)
             {
-                gameObject.SetActive(false);//desactiva el enemigo
+                gameObject.SetActive(false);
+                
+                GameEvents.Instance?.RaiseEnemyDied();
+                
                 if (ui != null)
-                    ui.AddScore(100); // Suma 100 puntos por enemigo eliminado
+                    ui.AddScore(100);
             }
-            if (spawner != null)//verifica si el spawner no es nulo
+            if (spawner != null)
             {
-                spawner.EnemyDied(); //notifica al spawner que el enemigo ha muerto
+                spawner.EnemyDied();
             }
         }
         else if (other.gameObject.CompareTag("Player"))
